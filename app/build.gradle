@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.2"
     }
     buildTypes {
         release {
@@ -22,27 +22,4 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:20.0.0'
-}
-
-
-bintray {
-    user = System.getenv('bintray_user')
-    key = System.getenv('bintray_key')
-
-    publications = ['mavenStuff'] //When uploading Maven-based publication files
-
-    dryRun = false //Whether to run this as dry-run, without deploying
-    publish = true //If version should be auto published after an upload
-
-    pkg {
-        repo = 'https://dl.bintray.com/155martinmoreno/maven'
-        name = 'com.tinchoapps.devutils'
-        websiteUrl = 'https://github.com/155martinmoreno/android-dev-utils'
-        issueTrackerUrl = 'https://github.com/155martinmoreno/android-dev-utils/issues'
-        vcsUrl = 'https://github.com/155martinmoreno/android-dev-utils.git'
-        licenses = ['MIT']
-        labels = ['android', 'dev-tools', 'tools']
-        publicDownloadNumbers = true
-    }
-
 }

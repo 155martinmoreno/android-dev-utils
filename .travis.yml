@@ -15,4 +15,4 @@ android:
     - android-22
 
 script:
-  - ./gradlew assembleDebug bintrayUpload
+  - ./gradlew assembleDebug
