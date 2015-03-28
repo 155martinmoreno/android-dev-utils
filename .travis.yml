@@ -5,7 +5,7 @@ before_install:
   - chmod +x gradlew
 
 android:
-  compileSdk: 21
+  compileSdk: 22
   buildTools: 22.0.1
   acceptAllLicenses: true
 
