@@ -15,4 +15,6 @@ android:
 
     # Additional components
     - extra-google-m2repository
-    - extra-google-m2repository
+
+  script:
+    - ./gradlew assembleDebug
