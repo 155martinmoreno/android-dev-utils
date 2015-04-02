@@ -1,6 +1,10 @@
 language: android
 jdk: oraclejdk7
 
+branches:
+  only:
+    - master
+
 before_install:
   - chmod +x gradlew
 
@@ -15,4 +19,12 @@ android:
     - android-22
 
 script:
-  - ./gradlew clean assembleDebug
+  - ./gradlew assembleRelease
+
+deploy:
+  provider: releases
+  api_key: ${GITHUB_TOKEN}
+  file: app/build/outputs/aar/app-release-*.aar
+  skip_cleanup: true
+  on:
+    tags: true
