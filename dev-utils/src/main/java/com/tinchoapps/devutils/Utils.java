@@ -3,7 +3,6 @@ package com.tinchoapps.devutils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
 public final class Utils
@@ -43,34 +42,5 @@ public final class Utils
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);
-    }
-
-    /**
-     * From http://stackoverflow.com/a/11306854.
-     * Gets the caller class name via reflection;
-     *
-     * @return caller class name
-     */
-    public static
-    @Nullable
-    String getCallerCallerClassName()
-    {
-        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-        String callerClassName = null;
-        for (int i = 1; i < stElements.length; i++)
-        {
-            StackTraceElement ste = stElements[i];
-            if (!ste.getClassName().equals(Utils.class.getName()) && ste.getClassName().indexOf("java.lang.Thread") != 0)
-            {
-                if (callerClassName == null)
-                {
-                    callerClassName = ste.getClassName();
-                } else if (!callerClassName.equals(ste.getClassName()))
-                {
-                    return ste.getClassName();
-                }
-            }
-        }
-        return null;
     }
 }
