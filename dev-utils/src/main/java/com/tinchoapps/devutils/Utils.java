@@ -3,8 +3,12 @@ package com.tinchoapps.devutils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
+import android.graphics.Point;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 public final class Utils
 {
@@ -12,7 +16,7 @@ public final class Utils
     {
     }
 
-    public static boolean isDebugBuild(final Context context)
+    public static boolean isDebugBuild(@NonNull final Context context)
     {
         return (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
     }
@@ -24,7 +28,7 @@ public final class Utils
      * @param dp      A value in dp (density independent pixels) unit. Which we need to convert into pixels
      * @return A float value to represent px equivalent to dp depending on device density
      */
-    public static float dpToPixel(Context context, float dp)
+    public static float dpToPixel(@NonNull final Context context, final float dp)
     {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -38,39 +42,28 @@ public final class Utils
      * @param px      A value in px (pixels) unit. Which we need to convert into db
      * @return A float value to represent dp equivalent to px value
      */
-    public static float pixelsToDp(Context context, float px)
+    public static float pixelsToDp(@NonNull final Context context, final float px)
     {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);
     }
 
-    /**
-     * From http://stackoverflow.com/a/11306854.
-     * Gets the caller class name via reflection;
-     *
-     * @return caller class name
-     */
-    public static
-    @Nullable
-    String getCallerCallerClassName()
+    public static Point getScreenSize(@NonNull final Context context)
     {
-        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-        String callerClassName = null;
-        for (int i = 1; i < stElements.length; i++)
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        Point size = new Point();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
         {
-            StackTraceElement ste = stElements[i];
-            if (!ste.getClassName().equals(Utils.class.getName()) && ste.getClassName().indexOf("java.lang.Thread") != 0)
-            {
-                if (callerClassName == null)
-                {
-                    callerClassName = ste.getClassName();
-                } else if (!callerClassName.equals(ste.getClassName()))
-                {
-                    return ste.getClassName();
-                }
-            }
+            display.getSize(size);
+        } else
+        {
+            size.set(display.getWidth(), display.getHeight());
         }
-        return null;
+
+        return size;
     }
 }

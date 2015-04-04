@@ -92,25 +92,66 @@ public abstract class BaseLogger
     /**
      * @return a context to log, generally the app context;
      */
-    protected abstract @NonNull Context getLoggerContext();
+    @NonNull
+    protected abstract Context getLoggerContext();
 
     /**
      * @return an implementation of RemoteLogger, ie: a wrapper to google analytics;
      */
-    protected abstract @Nullable RemoteLogger getRemoteLogger();
+    @Nullable
+    protected abstract RemoteLogger getRemoteLogger();
 
     protected String getTag(@Nullable final String proposedTag)
     {
         String result;
         if (proposedTag == null)
         {
-            result = Utils.getCallerCallerClassName();
+            result = getDefaultTag();
         } else
         {
             result = proposedTag;
         }
 
         return result;
+    }
+
+    /**
+     * From http://stackoverflow.com/a/11306854 and modified.
+     * Gets the caller class name via reflection;
+     *
+     * @return caller class simple name;
+     */
+    @Nullable
+    protected String getDefaultTag()
+    {
+        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+        String callerClassName = null;
+        for (int i = 1; i < stElements.length; i++)
+        {
+            StackTraceElement ste = stElements[i];
+            String classFullName = ste.getClassName();
+
+            if (!classFullName.equals(Utils.class.getName()) && classFullName.indexOf("java.lang.Thread") != 0)
+            {
+                if (callerClassName == null)
+                {
+                    callerClassName = classFullName;
+                } else if (!callerClassName.equals(classFullName))
+                {
+                    String tag = "";
+
+                    int lastIndexOf = classFullName.lastIndexOf(".");
+
+                    if (lastIndexOf > -1 && lastIndexOf + 1 <= classFullName.length())
+                    {
+                        tag = classFullName.substring(lastIndexOf + 1);
+                    }
+
+                    return tag;
+                }
+            }
+        }
+        return null;
     }
 
     //
