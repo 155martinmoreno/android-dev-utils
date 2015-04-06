@@ -1,4 +1,4 @@
-package com.tinchoapps.devutils;
+package com.tinchoapps.devutils.Camera;
 
 import android.content.Context;
 import android.hardware.Camera;
