@@ -53,7 +53,7 @@ public final class BitmapUtils
         int initialSize = computeInitialSampleSize(width, height, minSideLength, maxNumOfPixels);
 
         return initialSize <= 8
-                ? Utils.nextPowerOf2(initialSize)
+                ? nextPowerOf2(initialSize)
                 : (initialSize + 7) / 8 * 8;
     }
 
@@ -83,7 +83,7 @@ public final class BitmapUtils
         if (initialSize <= 1) return 1;
 
         return initialSize <= 8
-                ? Utils.prevPowerOf2(initialSize)
+                ? prevPowerOf2(initialSize)
                 : initialSize / 8 * 8;
     }
 
@@ -94,7 +94,7 @@ public final class BitmapUtils
         if (initialSize <= 1) return 1;
 
         return initialSize <= 8
-                ? Utils.prevPowerOf2(initialSize)
+                ? prevPowerOf2(initialSize)
                 : initialSize / 8 * 8;
     }
 
@@ -104,7 +104,7 @@ public final class BitmapUtils
         Utils.assertTrue(scale > 0);
         int initialSize = Math.max(1, (int) FloatMath.ceil(1 / scale));
         return initialSize <= 8
-                ? Utils.nextPowerOf2(initialSize)
+                ? nextPowerOf2(initialSize)
                 : (initialSize + 7) / 8 * 8;
     }
 
@@ -414,6 +414,36 @@ public final class BitmapUtils
 
         //Save the file
         return saveToFile(bitmap, destinationFile.getAbsolutePath(), Bitmap.CompressFormat.JPEG, 90, true);
+    }
+
+
+    /**
+     * Returns the next power of two.
+     * Returns the input if it is already power of 2.
+     * Throws IllegalArgumentException if the input is <= 0 or
+     * the answer overflows.
+     */
+    public static int nextPowerOf2(int n)
+    {
+        if (n <= 0 || n > (1 << 30)) throw new IllegalArgumentException("n is invalid: " + n);
+        n -= 1;
+        n |= n >> 16;
+        n |= n >> 8;
+        n |= n >> 4;
+        n |= n >> 2;
+        n |= n >> 1;
+        return n + 1;
+    }
+
+    /**
+     * Returns the previous power of two.
+     * Returns the input if it is already power of 2.
+     * Throws IllegalArgumentException if the input is <= 0
+     */
+    public static int prevPowerOf2(int n)
+    {
+        if (n <= 0) throw new IllegalArgumentException();
+        return Integer.highestOneBit(n);
     }
 }
 
