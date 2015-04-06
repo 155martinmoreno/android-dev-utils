@@ -84,4 +84,10 @@ public class CameraUtils
 
         camera.setParameters(parameters);
     }
+
+    public static void stopPreview(@NonNull Camera camera)
+    {
+        camera.stopPreview();
+        camera.setPreviewCallback(null);
+    }
 }
