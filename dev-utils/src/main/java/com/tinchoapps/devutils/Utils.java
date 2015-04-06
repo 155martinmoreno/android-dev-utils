@@ -5,10 +5,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.io.File;
 
 public final class Utils
 {
@@ -65,5 +69,61 @@ public final class Utils
         }
 
         return size;
+    }
+
+    @Nullable
+    public static File getPictureDirectoryForApp(String dirName)
+    {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), dirName);
+
+        if (!mediaStorageDir.exists())
+        {
+            if (!mediaStorageDir.mkdirs())
+            {
+                return null;
+            }
+        }
+
+        return mediaStorageDir;
+    }
+
+    /**
+     * Throws AssertionError if the input is false.
+     */
+    public static void assertTrue(boolean condition)
+    {
+        if (!condition)
+        {
+            throw new AssertionError();
+        }
+    }
+
+    /**
+     * Returns the next power of two.
+     * Returns the input if it is already power of 2.
+     * Throws IllegalArgumentException if the input is <= 0 or
+     * the answer overflows.
+     */
+    public static int nextPowerOf2(int n)
+    {
+        if (n <= 0 || n > (1 << 30)) throw new IllegalArgumentException("n is invalid: " + n);
+        n -= 1;
+        n |= n >> 16;
+        n |= n >> 8;
+        n |= n >> 4;
+        n |= n >> 2;
+        n |= n >> 1;
+        return n + 1;
+    }
+
+    /**
+     * Returns the previous power of two.
+     * Returns the input if it is already power of 2.
+     * Throws IllegalArgumentException if the input is <= 0
+     */
+    public static int prevPowerOf2(int n)
+    {
+        if (n <= 0) throw new IllegalArgumentException();
+        return Integer.highestOneBit(n);
     }
 }
