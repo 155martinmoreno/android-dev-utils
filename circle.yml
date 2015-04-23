@@ -6,15 +6,11 @@ general:
     artifacts:
         - /home/ubuntu/android-dev-utils/app/build/outputs/apk/
 
-machine:
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
-
 dependencies:
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-22.0.1,android-22,extra-google-m2repository,extra-google-google_play_services,extra-android-support
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
     override:
-        - ./gradlew assembleDebug
+        - ./gradlew assembleRelease
+        - cp -r project-name/build/outputs $CIRCLE_ARTIFACTS
