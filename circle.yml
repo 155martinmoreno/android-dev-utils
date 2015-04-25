@@ -15,4 +15,4 @@ test:
     override:
         - chmod +x ./gradlew
         - ./gradlew assembleRelease
-        - cp -r project-name/build/outputs $CIRCLE_ARTIFACTS
+        - cp -r dev-utils/build/outputs $CIRCLE_ARTIFACTS
