@@ -9,7 +9,7 @@ dependencies:
         - ~/android
 
     override:
-        - echo y | android update sdk --no-ui --all --filter tools,build-tools-22.0.1
+        - echo y | android update sdk --no-ui --all --filter tools,build-tools-22.0.1,extra-android-support,extra-android-m2repository,extra-android-support
 
 test:
     override:
