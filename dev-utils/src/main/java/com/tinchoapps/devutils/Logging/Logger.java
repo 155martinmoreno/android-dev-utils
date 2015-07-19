@@ -5,29 +5,51 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import com.tinchoapps.devutils.Utils;
 
-public abstract class BaseLogger
+public class Logger
 {
+    private static Logger instance;
+    private boolean isDebugBuild = false;
+
+    public static Logger get()
+    {
+        if (instance == null)
+        {
+            instance = new Logger();
+        }
+
+        return instance;
+    }
+
+
+    private RemoteLogger remoteLogger;
+
+    private Logger()
+    {
+    }
+
+    public void isDebugBuild(boolean isDebugBuild)
+    {
+        this.isDebugBuild = isDebugBuild;
+    }
+
     public void debug(@NonNull final String message)
     {
-        debug(null, message, false);
+        debug(null, message, false, null);
     }
 
     public void debug(@Nullable final String tag, @NonNull final String message)
     {
-        debug(tag, message, false);
+        debug(tag, message, false, null);
     }
 
-    public void debug(@Nullable final String tag, @NonNull final String message, final boolean displayToast)
+    public void debug(@Nullable final String tag, @NonNull final String message, final boolean displayToast, @Nullable final Context context)
     {
-        Context context = getLoggerContext();
-
-        if (Utils.isDebugBuild(context))
+        if (isDebugBuild)
         {
             Log.d(getTag(tag), message);
 
-            if (displayToast)
+            if (displayToast && context != null)
             {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
@@ -36,12 +58,22 @@ public abstract class BaseLogger
 
     public void info(String info)
     {
-        info(null, info);
+        info(null, info, false);
     }
 
-    public void info(@Nullable final String tag, String info)
+    public void info(String info, boolean sendToRemote)
+    {
+        info(null, info, sendToRemote);
+    }
+
+    public void info(@Nullable final String tag, @Nullable final String info, final boolean sendToRemote)
     {
         Log.i(getTag(tag), info);
+
+        if (sendToRemote && remoteLogger != null)
+        {
+            remoteLogger.onSendInfoToRemote(tag, info);
+        }
     }
 
     public void warning(String message)
@@ -78,28 +110,17 @@ public abstract class BaseLogger
             e.printStackTrace();
         }
 
-        if (sendToRemote)
+        if (sendToRemote && remoteLogger != null)
         {
-            RemoteLogger remoteLogger = getRemoteLogger();
-
-            if (remoteLogger != null)
-            {
-                remoteLogger.onSendToRemote(tag, error, e);
-            }
+            remoteLogger.onSendErrorToRemote(tag, error, e);
         }
     }
 
-    /**
-     * @return a context to log, generally the app context;
-     */
-    @NonNull
-    protected abstract Context getLoggerContext();
 
-    /**
-     * @return an implementation of RemoteLogger, ie: a wrapper to google analytics;
-     */
-    @Nullable
-    protected abstract RemoteLogger getRemoteLogger();
+    protected void setRemoteLogger(@NonNull final RemoteLogger remoteLogger)
+    {
+        this.remoteLogger = remoteLogger;
+    }
 
     protected String getTag(@Nullable final String proposedTag)
     {
@@ -131,7 +152,7 @@ public abstract class BaseLogger
             StackTraceElement ste = stElements[i];
             String classFullName = ste.getClassName();
 
-            if (!classFullName.equals(Utils.class.getName()) && classFullName.indexOf("java.lang.Thread") != 0)
+            if (!classFullName.equals(Logger.class.getName()) && classFullName.indexOf("java.lang.Thread") != 0)
             {
                 if (callerClassName == null)
                 {
@@ -160,6 +181,8 @@ public abstract class BaseLogger
 
     public interface RemoteLogger
     {
-        void onSendToRemote(@Nullable final String tag, String error, @Nullable Exception e);
+        void onSendErrorToRemote(@Nullable final String tag, String error, @Nullable Exception e);
+
+        void onSendInfoToRemote(@Nullable final String tag, @NonNull String info);
     }
 }

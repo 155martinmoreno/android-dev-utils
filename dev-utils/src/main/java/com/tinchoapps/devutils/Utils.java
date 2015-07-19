@@ -20,6 +20,15 @@ public final class Utils
     {
     }
 
+    /**
+     * Same as BuildConfig.DEBUG but will work on runtime.
+     * Also will work with Eclipse ADT (although you should strongly switch to Android Studio!)
+     *
+     * Will extract if it's a debug build from the app flags (defined in the manifest)
+     *
+     * @param context
+     * @return boolean
+     */
     public static boolean isDebugBuild(@NonNull final Context context)
     {
         return (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
