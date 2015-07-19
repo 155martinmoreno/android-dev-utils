@@ -21,19 +21,10 @@ public final class Utils
     }
 
     /**
-     * Returns True or False depending if its running on a debug build or not.
+     * Same as BuildConfig.DEBUG but will work on runtime.
+     * Also will work with Eclipse ADT (although you should strongly switch to Android Studio!)
      *
-     * *** Will only work if building with Gradle!! ***
-     *
-     * @return boolean
-     */
-    public static boolean isDebugBuild()
-    {
-        return BuildConfig.DEBUG;
-    }
-
-    /**
-     * same as isDebugBuild() but will work with Eclipse ADT (although you should strongly switch to Android Studio!)
+     * Will extract if it's a debug build from the app flags (defined in the manifest)
      *
      * @param context
      * @return boolean

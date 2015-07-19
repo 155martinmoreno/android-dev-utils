@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import com.tinchoapps.devutils.Utils;
 
 public class Logger
 {
     private static Logger instance;
+    private boolean isDebugBuild = false;
 
     public static Logger get()
     {
@@ -28,6 +28,11 @@ public class Logger
     {
     }
 
+    public void isDebugBuild(boolean isDebugBuild)
+    {
+        this.isDebugBuild = isDebugBuild;
+    }
+
     public void debug(@NonNull final String message)
     {
         debug(null, message, false, null);
@@ -40,7 +45,7 @@ public class Logger
 
     public void debug(@Nullable final String tag, @NonNull final String message, final boolean displayToast, @Nullable final Context context)
     {
-        if (Utils.isDebugBuild())
+        if (isDebugBuild)
         {
             Log.d(getTag(tag), message);
 
@@ -147,7 +152,7 @@ public class Logger
             StackTraceElement ste = stElements[i];
             String classFullName = ste.getClassName();
 
-            if (!classFullName.equals(Utils.class.getName()) && classFullName.indexOf("java.lang.Thread") != 0)
+            if (!classFullName.equals(Logger.class.getName()) && classFullName.indexOf("java.lang.Thread") != 0)
             {
                 if (callerClassName == null)
                 {
