@@ -61,16 +61,16 @@ public class Logger
         info(null, info, false);
     }
 
-    public void info(String info, boolean sendToRemote)
+    public void info(String info, boolean sendToAnalytics)
     {
-        info(null, info, sendToRemote);
+        info(null, info, sendToAnalytics);
     }
 
-    public void info(@Nullable final String tag, @Nullable final String info, final boolean sendToRemote)
+    public void info(@Nullable final String tag, @Nullable final String info, final boolean sendToAnalytics)
     {
         Log.i(getTag(tag), info);
 
-        if (sendToRemote && remoteLogger != null)
+        if (sendToAnalytics && remoteLogger != null)
         {
             remoteLogger.onSendInfoToRemote(tag, info);
         }
@@ -101,7 +101,7 @@ public class Logger
         error(null, error, e, sendToAnalytics);
     }
 
-    public void error(@Nullable final String tag, String error, @Nullable Exception e, boolean sendToRemote)
+    public void error(@Nullable final String tag, String error, @Nullable Exception e, boolean sendToAnalytics)
     {
         Log.e(getTag(tag), error + "\n");
 
@@ -110,14 +110,14 @@ public class Logger
             e.printStackTrace();
         }
 
-        if (sendToRemote && remoteLogger != null)
+        if (sendToAnalytics && remoteLogger != null)
         {
             remoteLogger.onSendErrorToRemote(tag, error, e);
         }
     }
 
 
-    protected void setRemoteLogger(@NonNull final RemoteLogger remoteLogger)
+    public void setRemoteLogger(@NonNull final RemoteLogger remoteLogger)
     {
         this.remoteLogger = remoteLogger;
     }
