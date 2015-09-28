@@ -117,7 +117,7 @@ public class Logger
     }
 
 
-    protected void setRemoteLogger(@NonNull final RemoteLogger remoteLogger)
+    public void setRemoteLogger(@NonNull final RemoteLogger remoteLogger)
     {
         this.remoteLogger = remoteLogger;
     }
